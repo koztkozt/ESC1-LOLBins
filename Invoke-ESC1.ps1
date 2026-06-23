@@ -145,8 +145,8 @@ _continue_ = "upn=$TargetUPN"
     Write-Host "    REQ: $reqPath" -ForegroundColor Gray
 
     # Step 4: Submit to CA
-    Write-Host "[Step 4/6] Submitting CSR to CA: $CA ..." -ForegroundColor Cyan
-    $result = certreq -submit -config $CA $reqPath $cerPath 2>&1
+    Write-Host "[Step 4/6] Submitting CSR to CA: $CA (Template: $templateAttr) ..." -ForegroundColor Cyan
+    $result = certreq -submit -attrib "CertificateTemplate:$templateAttr" -config $CA $reqPath $cerPath 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "certreq -submit failed: $result"
     }
@@ -169,7 +169,7 @@ _continue_ = "upn=$TargetUPN"
     }
 
     $certThumbprint = $cert.Thumbprint
-    $result = certutil -exportPFX -user My $certThumbprint $pfxPath "" 2>&1
+    $result = certutil -p "" -exportPFX -user My $certThumbprint $pfxPath 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "certutil -exportPFX failed: $result"
     }

