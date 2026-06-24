@@ -154,15 +154,19 @@ _continue_ = "upn=$TargetUPN"
 
     # Step 5: Accept and export PFX
     Write-Host "[Step 5/6] Accepting certificate and exporting PFX..." -ForegroundColor Cyan
+
+    # Snapshot cert store before accept so we can find the new one
+    $beforeThumbprints = Get-ChildItem Cert:\CurrentUser\My | Select-Object -ExpandProperty Thumbprint
+
     $result = certreq -accept $cerPath 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "certreq -accept failed: $result"
     }
 
-    # Find the just-accepted cert by thumbprint and export
+    # Find the newly added cert by comparing before/after
     $cert = Get-ChildItem Cert:\CurrentUser\My | Where-Object {
-        $_.NotBefore -gt (Get-Date).AddMinutes(-5)
-    } | Sort-Object NotBefore -Descending | Select-Object -First 1
+        $_.Thumbprint -notin $beforeThumbprints
+    } | Select-Object -First 1
 
     if (-not $cert) {
         throw "Could not find the issued certificate in the store"
