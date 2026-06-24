@@ -195,11 +195,12 @@ _continue_ = "upn=$TargetUPN"
             }
         }
     } else {
-        Write-Host "`n[*] KeepFiles specified — temporary files retained." -ForegroundColor Gray
+        Write-Host "`n[*] KeepFiles specified - temporary files retained." -ForegroundColor Gray
     }
 
     # Clean up the specific cert from personal store
     if ($certThumbprint) {
-        Remove-Item "Cert:\CurrentUser\My\$certThumbprint" -Force 2>$null
+        $certStorePath = 'Cert:\CurrentUser\My\' + $certThumbprint
+        Remove-Item $certStorePath -Force -ErrorAction SilentlyContinue
     }
 }
