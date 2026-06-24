@@ -173,10 +173,8 @@ _continue_ = "upn=$TargetUPN"
     }
 
     $certThumbprint = $cert.Thumbprint
-    $result = certutil -p "" -exportPFX -user My $certThumbprint $pfxPath 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "certutil -exportPFX failed: $result"
-    }
+    $pfxBytes = $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx, '')
+    [System.IO.File]::WriteAllBytes($pfxPath, $pfxBytes)
     Write-Host "    PFX: $pfxPath" -ForegroundColor Gray
 
     # Step 6: Authenticate via PKINIT
