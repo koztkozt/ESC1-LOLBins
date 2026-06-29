@@ -95,6 +95,7 @@ $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $baseName = "esc1_$timestamp"
 $infPath = Join-Path $OutputPath "$baseName.inf"
 $reqPath = Join-Path $OutputPath "$baseName.req"
+$rspPath = Join-Path $OutputPath "$baseName.rsp"
 $cerPath = Join-Path $OutputPath "$baseName.cer"
 $pfxPath = Join-Path $OutputPath "$baseName.pfx"
 
@@ -190,7 +191,7 @@ _continue_ = "upn=$TargetUPN"
 } finally {
     if (-not $KeepFiles) {
         Write-Host "`n[*] Cleaning up temporary files..." -ForegroundColor Gray
-        @($infPath, $reqPath, $cerPath, $pfxPath) | ForEach-Object {
+        @($infPath, $reqPath, $rspPath, $cerPath, $pfxPath) | ForEach-Object {
             if (Test-Path $_) {
                 Remove-Item $_ -Force
                 Write-Host "    Removed: $_" -ForegroundColor DarkGray
