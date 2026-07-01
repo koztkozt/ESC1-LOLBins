@@ -458,7 +458,4 @@ _continue_ = "upn=$TargetUPN"
     } else {
         Write-Host "`n[*] KeepFiles specified - temporary files retained." -ForegroundColor Gray
     }
-
-    # Cert stays in store - PKINIT needs it for network auth
-    # Clean up when done: certutil -delstore -user My <thumbprint>
 }
